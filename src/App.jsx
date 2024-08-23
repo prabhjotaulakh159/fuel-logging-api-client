@@ -11,12 +11,15 @@ export const AppContext = createContext('context')
 const App = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
 
     const contextValue = {
         username: username,
         setUsername: setUsername,
         password: password,
-        setPassword: setPassword
+        setPassword: setPassword,
+        error: error,
+        setError: setError
     }
 
     return (
