@@ -17,7 +17,7 @@ const Register = () => {
             usernameAndPasswordValidation(username, password)
             const body = { username: username, password: password }
             const response = await axios.post(process.env.REACT_APP_API_URL + '/public/user/register', body)
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 throw new Error('Something went wrong with registration, please try again later')
             }
             setMessage('You have successfully registered')
