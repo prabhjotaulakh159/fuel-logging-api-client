@@ -23,8 +23,7 @@ const Login = () => {
             }
             const token = response.data.bearerToken
             localStorage.setItem('token', `Bearer ${token}`)
-            navigate('/') // let the login component mount first with the message
-            // thats why we wait 1 second
+            navigate('/') 
         } catch (e) {
             if (e.response && e.response.data) {
                 setError(e.response.data.message)
