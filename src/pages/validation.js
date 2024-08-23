@@ -11,7 +11,7 @@ export const usernameAndPasswordValidation = (username, password) => {
     if (password.trim().length === 0) {
         throw new Error('Password cannot be blank')
     }
-    if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$/.test(password)) {
+    if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(password)) {
         throw new Error('Password must be atleast 8 characters, with atleast one uppercase, one lowercase and one number')
     }
 }
