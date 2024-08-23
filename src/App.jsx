@@ -6,8 +6,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import { createContext, useState } from 'react'
 
-
-const AppContext = createContext('context')
+export const AppContext = createContext('context')
 
 const App = () => {
     const [username, setUsername] = useState('')

@@ -1,6 +1,8 @@
+import AuthForm from "../components/AuthForm"
+
 const Register = () => {
     return (
-        <div>register</div>
+        <AuthForm submitFunc={null} btnText="Register" isLogin={false} />
     )
 }
 
