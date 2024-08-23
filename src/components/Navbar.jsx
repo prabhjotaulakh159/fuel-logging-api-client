@@ -8,10 +8,10 @@ const Navbar = () => {
             <div className='d-none d-lg-flex'>
                 <ul className='navbar-nav'>
                     <li className='nav-item active'>
-                        <Link to='/' className='nav-link'>Register</Link>
+                        <Link to='/register' className='nav-link'>Register</Link>
                     </li>
                     <li className='nav-item active'>
-                        <Link to='/' className='nav-link'>Login</Link>
+                        <Link to='/login' className='nav-link'>Login</Link>
                     </li>
                     <li className='nav-item active'>
                         <a href='https://github.com/prabhjotaulakh159/fuel-logging-api-client' className='nav-link'>GitHub</a>
