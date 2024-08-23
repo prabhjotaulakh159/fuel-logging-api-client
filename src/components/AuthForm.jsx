@@ -2,9 +2,12 @@ import './AuthForm.css'
 import { Link } from 'react-router-dom';
 import { AppContext } from '../App';
 import { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const AuthForm = ({submitFunc, btnText, isLogin}) => {
-    const { username, setUsername, password, setPassword, error, setError } = useContext(AppContext)
+    const { username, setUsername, password, setPassword, 
+            error, setError, message,
+     } = useContext(AppContext)
 
     // reset the error on page refresh or change to login/register
     useEffect(() => {
@@ -42,6 +45,7 @@ const AuthForm = ({submitFunc, btnText, isLogin}) => {
                 <button type="submit" className="btn btn-primary w-100">{btnText}</button>
                 { !isLogin && <p className='mt-3 text-center'>Already have an account ? <Link to='/login'>Login</Link> instead</p>}
                 { error && <p className='mt-3 text-center text-danger'>{error}</p>}
+                { message && <p className='mt-3 text-center text-success'>{message}</p>}
             </form>
         </div>
     );

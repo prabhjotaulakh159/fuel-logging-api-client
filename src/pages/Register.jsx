@@ -3,9 +3,11 @@ import AuthForm from "../components/AuthForm"
 import { usernameAndPasswordValidation } from "./validation"
 import { AppContext } from "../App"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 const Register = () => {
-    const { setError } = useContext(AppContext)
+    const { setError, setMessage } = useContext(AppContext)
+    const navigate = useNavigate()
 
     const registerFunc = async (e) => {
         e.preventDefault()
@@ -15,7 +17,12 @@ const Register = () => {
             usernameAndPasswordValidation(username, password)
             const body = { username: username, password: password }
             const response = await axios.post(process.env.REACT_APP_API_URL + '/public/user/register', body)
-            console.log(response)
+            if (response.status != 200) {
+                throw new Error('Something went wrong with registration, please try again later')
+            }
+            setMessage('You have successfully registered')
+            setTimeout(() => navigate('/login'), 1000) // let the login component mount first with the message
+            // thats why we wait 1 second
         } catch (e) {
             if (e.response && e.response.data) {
                 setError(e.response.data.message)

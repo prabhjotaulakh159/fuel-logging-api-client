@@ -12,6 +12,7 @@ const App = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [message, setMessage] = useState('')
 
     const contextValue = {
         username: username,
@@ -19,7 +20,9 @@ const App = () => {
         password: password,
         setPassword: setPassword,
         error: error,
-        setError: setError
+        setError: setError,
+        message: message,
+        setMessage: setMessage
     }
 
     return (
