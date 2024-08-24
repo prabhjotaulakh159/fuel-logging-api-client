@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 const Login = () => {
-    const { setError, setMessage } = useContext(AppContext)
+    const { setError, setMessage, setIsAuthenticated } = useContext(AppContext)
     const navigate = useNavigate();
 
     const loginFunc = async (e) => {
@@ -23,7 +23,8 @@ const Login = () => {
             }
             const token = response.data.bearerToken
             localStorage.setItem('token', `Bearer ${token}`)
-            navigate('/') 
+            setIsAuthenticated(true)
+            navigate('/sheets') 
         } catch (e) {
             if (e.response && e.response.data) {
                 setError(e.response.data.message)
