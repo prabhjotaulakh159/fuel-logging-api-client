@@ -16,6 +16,7 @@ const App = () => {
     const [message, setMessage] = useState('')
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [sheets, setSheets] = useState([])
 
     const contextValue = {
         username: username,
@@ -29,7 +30,9 @@ const App = () => {
         isAuthenticated: isAuthenticated,
         setIsAuthenticated: setIsAuthenticated,
         loading: loading,
-        setLoading: setLoading
+        setLoading: setLoading,
+        sheets: sheets,
+        setSheets: setSheets
     }
 
     return (
@@ -38,8 +41,8 @@ const App = () => {
                 <Navbar/>
                 <Routes>
                     <Route path='/' element={<Home/>} />
-                    <Route path='/register' element={<Register/>} />
-                    <Route path='/login' element={<Login/>} />
+                    <Route path='/register' element={isAuthenticated ? <Navigate to='/sheets'/> : <Register/>} />
+                    <Route path='/login' element={isAuthenticated ? <Navigate to='/sheets'/> : <Login/>} />
                     <Route path='/sheets' element={
                       isAuthenticated ? <Sheets/> : <Navigate to='/login'/>
                     }/>
