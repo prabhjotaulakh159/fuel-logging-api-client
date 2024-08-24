@@ -3,10 +3,11 @@ import AuthForm from "../components/AuthForm"
 import { usernameAndPasswordValidation } from "./validation"
 import { AppContext } from "../App"
 import { useNavigate } from "react-router-dom"
-import axiosInstance from '../axiosConfig'
+import axiosInstance, { useAxiosErrorHandling } from '../axiosConfig'
 
 const Login = () => {
-    const { setError, setMessage, setIsAuthenticated } = useContext(AppContext)
+    useAxiosErrorHandling()
+    const { setMessage, setIsAuthenticated, setError } = useContext(AppContext)
     const navigate = useNavigate();
 
     const loginFunc = async (e) => {
@@ -15,25 +16,18 @@ const Login = () => {
         const username = e.target.username.value
         const password = e.target.password.value
         try {
-            usernameAndPasswordValidation(username, password)
-            const body = { username: username, password: password }
-            const response = await axiosInstance.post('/public/user/login', body)
-            if (response.status !== 200) {
-                throw new Error('Something went wrong with login, please try again later')
-            }
-            const token = response.data.bearerToken
-            localStorage.setItem('token', `Bearer ${token}`)
-            setIsAuthenticated(true)
-            navigate('/sheets') 
-        } catch (e) {
-            if (e.response && e.response.data) {
-                setError(e.response.data.message)
-            } else if (e.message) {
-                setError(e.message)
-            } else {
-                setError('Internal server error')
-            }
+          usernameAndPasswordValidation(username, password)
         }
+        catch (e) {
+          setError(e.message)
+          return;
+        }
+        const body = { username: username, password: password }
+        const response = await axiosInstance.post('/public/user/login', body)
+        const token = response.data.bearerToken
+        localStorage.setItem('token', `Bearer ${token}`)
+        setIsAuthenticated(true)
+        navigate('/sheets') 
     }
 
     return (

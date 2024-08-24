@@ -1,34 +1,29 @@
 import { useEffect, useContext } from 'react'
 import { AppContext } from '../App'
-import axios from 'axios'
+import axiosInstance, { useAxiosErrorHandling } from '../axiosConfig'
 
 const Sheets = () => {
+  useAxiosErrorHandling()
   const { loading, setLoading, error, setError, sheets, setSheets } = useContext(AppContext)
 
   const deleteSheet = async (id) => {
     setLoading(true)
-    try {
-      const response = await axios.delete(process.env.REACT_APP_API_URL + `/private/sheet/delete/${id}`)
-      if (response.status === 200) {
-        const newSheets = sheets.filter(sheet => sheet.sheet_id !== id, {
-          headers: { 'Authorization': localStorage.getItem('token') }
-        })
-        setSheets(newSheets)
-        setLoading(false)
+    await axiosInstance.delete(`/private/sheet/delete/${id}`, {
+      headers: {
+        'Authorization': localStorage.getItem('token')
       }
-    } catch (e) {
-      if (e.response && e.response.status === 401) {}
-      setLoading(false)
-      setError(e.message)
-    }
-  } 
+    })
+    const newSheets = sheets.filter(sheet => sheet.sheetId !== id)
+    setSheets(newSheets)
+    setLoading(false)
+  }
 
   useEffect(() => {
     setError(false)
     setLoading(true)
     if (sheets.length === 0) {
       const token = localStorage.getItem('token')
-      axios.get(process.env.REACT_APP_API_URL + '/private/sheet/all', {
+      axiosInstance.get(process.env.REACT_APP_API_URL + '/private/sheet/all', {
         headers: {
           'Authorization': token
         }
