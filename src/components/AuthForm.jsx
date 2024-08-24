@@ -2,7 +2,6 @@ import './AuthForm.css'
 import { Link } from 'react-router-dom';
 import { AppContext } from '../App';
 import { useContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 const AuthForm = ({submitFunc, btnText, isLogin}) => {
     const { username, setUsername, password, setPassword, 

@@ -2,7 +2,7 @@ import { useContext } from "react"
 import AuthForm from "../components/AuthForm"
 import { usernameAndPasswordValidation } from "./validation"
 import { AppContext } from "../App"
-import axios from "axios"
+import axiosInstance from "../axiosConfig"
 import { useNavigate } from "react-router-dom"
 
 const Register = () => {
@@ -16,7 +16,7 @@ const Register = () => {
         try {
             usernameAndPasswordValidation(username, password)
             const body = { username: username, password: password }
-            const response = await axios.post(process.env.REACT_APP_API_URL + '/public/user/register', body)
+            const response = await axiosInstance.post('/public/user/register', body)
             if (response.status !== 200) {
                 throw new Error('Something went wrong with registration, please try again later')
             }

@@ -5,6 +5,24 @@ import axios from 'axios'
 const Sheets = () => {
   const { loading, setLoading, error, setError, sheets, setSheets } = useContext(AppContext)
 
+  const deleteSheet = async (id) => {
+    setLoading(true)
+    try {
+      const response = await axios.delete(process.env.REACT_APP_API_URL + `/private/sheet/delete/${id}`)
+      if (response.status === 200) {
+        const newSheets = sheets.filter(sheet => sheet.sheet_id !== id, {
+          headers: { 'Authorization': localStorage.getItem('token') }
+        })
+        setSheets(newSheets)
+        setLoading(false)
+      }
+    } catch (e) {
+      if (e.response && e.response.status === 401) {}
+      setLoading(false)
+      setError(e.message)
+    }
+  } 
+
   useEffect(() => {
     setError(false)
     setLoading(true)
@@ -47,7 +65,7 @@ const Sheets = () => {
                 <div className="d-flex flex-wrap gap-2 mt-4">
                   <div className="btn btn-primary">View Logs</div>
                   <div className="btn btn-secondary">Update Sheet</div>
-                  <div className="btn btn-danger">Delete Sheet</div>
+                  <div onClick={() => deleteSheet(sheet.sheetId)} className="btn btn-danger">Delete Sheet</div>
                 </div>
               </div>
             </div>
