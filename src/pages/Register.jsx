@@ -22,10 +22,13 @@ const Register = () => {
           return;
         }
         const body = { username: username, password: password }
-        await axiosInstance.post('/public/user/register', body)
-        setMessage('You have successfully registered')
-        setTimeout(() => navigate('/login'), 1000) // let the login component mount first with the message
-        // thats why we wait 1 second
+        try {
+          await axiosInstance.post('/public/user/register', body)
+          setMessage('You have successfully registered')
+          setTimeout(() => navigate('/login'), 1000)
+        } catch (e) {
+          console.error(e);
+        } 
     }
 
     return (

@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import { createContext, useState } from 'react'
 import Sheets from './pages/Sheets'
+import UpdateSheet from './pages/UpdateSheet'
 
 export const AppContext = createContext('context')
 
@@ -14,6 +15,7 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
+    const [sheetName, setSheetName] = useState('')
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [loading, setLoading] = useState(true)
     const [sheets, setSheets] = useState([])
@@ -32,7 +34,9 @@ const App = () => {
         loading: loading,
         setLoading: setLoading,
         sheets: sheets,
-        setSheets: setSheets
+        setSheets: setSheets,
+        sheetName: sheetName,
+        setSheetName: setSheetName
     }
 
     return (
@@ -46,6 +50,7 @@ const App = () => {
                     <Route path='/sheets' element={
                       isAuthenticated ? <Sheets/> : <Navigate to='/login'/>
                     }/>
+                    <Route path='/update-sheet/:id' element={isAuthenticated ? <UpdateSheet/> : <Navigate to='/login'/> }/>
                 </Routes>
             </Container>
         </AppContext.Provider>

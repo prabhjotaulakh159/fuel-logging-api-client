@@ -23,11 +23,15 @@ const Login = () => {
           return;
         }
         const body = { username: username, password: password }
-        const response = await axiosInstance.post('/public/user/login', body)
-        const token = response.data.bearerToken
-        localStorage.setItem('token', `Bearer ${token}`)
-        setIsAuthenticated(true)
-        navigate('/sheets') 
+        try {
+          const response = await axiosInstance.post('/public/user/login', body)
+          const token = response.data.bearerToken
+          localStorage.setItem('token', `Bearer ${token}`)
+          setIsAuthenticated(true)
+          navigate('/sheets') 
+        } catch (e) {
+          console.error(e);
+        }
     }
 
     return (
