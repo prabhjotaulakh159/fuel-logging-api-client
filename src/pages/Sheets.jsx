@@ -1,10 +1,15 @@
 import { useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../App'
 import axiosInstance, { useAxiosErrorHandling } from '../axiosConfig'
 
 const Sheets = () => {
   useAxiosErrorHandling()
-  const { loading, setLoading, error, setError, sheets, setSheets, sheetName, setSheetName } = useContext(AppContext)
+
+  const nav = useNavigate()
+  const { loading, setLoading, error, setError, sheets, setSheets, sheetName, setSheetName,
+          message
+   } = useContext(AppContext)
 
   const deleteSheet = async (id) => {
     try {
@@ -77,6 +82,7 @@ const Sheets = () => {
   return (
     <div className="container mt-5">
       <div className="mt-4 text-danger">{error}</div>
+      <div className="mt-4 text-success">{message}</div>
       <form onSubmit={createSheet} className="d-flex flex-column flex-md-row gap-2">
         <input type="text" value={sheetName} onInput={e => setSheetName(e.target.value)} required placeholder="Sheet name"/>
         <button type="submit" className="btn btn-primary">Create sheet</button>
@@ -91,7 +97,7 @@ const Sheets = () => {
                   <h5 className="card-title">{sheet.sheetName}</h5>
                   <div className="d-flex flex-wrap gap-2 mt-4">
                     <div className="btn btn-primary">View Logs</div>
-                    <div className="btn btn-secondary">Update Sheet</div>
+                    <div onClick={() => nav(`/update-sheet/${sheet.sheetId}`)} className="btn btn-secondary">Update Sheet</div>
                     <div onClick={() => deleteSheet(sheet.sheetId)} className="btn btn-danger">Delete Sheet</div>
                   </div>
                 </div>

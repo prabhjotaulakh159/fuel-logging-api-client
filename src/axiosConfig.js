@@ -13,13 +13,16 @@ export const useAxiosErrorHandling = () => {
   axiosInstance.interceptors.response.use(
     response => response, 
     error => {
-      if (error.response && error.response.status === 403) {
+      if (error.response.status === 403) {
         setIsAuthenticated(false)
         localStorage.removeItem('token')
         nav('/login')
+        alert('hello world')
       } else if (error.response.status === 401) {
         nav("/sheets")
-      } else if (error.response && error.response.data) {
+      } else if (error.response.status === 400) {
+        setError(error.response.data.message)
+      } else if (error.response.data) {
         setError(error.response.data.message)
       } else if (error.message) {
         setError(error.message)
