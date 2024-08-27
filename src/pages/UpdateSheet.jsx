@@ -43,7 +43,7 @@ const UpdateSheet = () => {
       setMessage(`Successfully updated sheet to ${sheetName}`);
       const newSheets = sheets.map(sheet => {
         // keep this double equality
-        if (sheet.sheetId == id) {
+        if (sheet.sheetId === Number(id)) {
           return { ...sheet, sheetName }
         }
         return sheet; 

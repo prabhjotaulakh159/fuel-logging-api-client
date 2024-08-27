@@ -4,12 +4,30 @@ import {AppContext} from '../App'
 import { Link, useNavigate } from "react-router-dom"
 
 const Navbar = () => {
-    const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+    const {
+        isAuthenticated,
+        setUsername,
+        setPassword,
+        setError,
+        setMessage,
+        setIsAuthenticated,
+        setLoading,
+        setSheets,
+        setSheetName
+      } = useContext(AppContext)
+
     const nav = useNavigate()
 
     const logout = () => {
+        setUsername('')
+        setPassword('')
+        setError('')
+        setMessage('')
         setIsAuthenticated(false)
-        localStorage.removeItem('token')
+        setLoading(false)
+        setSheets([])
+        setSheetName('')
+        localStorage.clear()
         nav('/')
     }
 
