@@ -1,37 +1,35 @@
-import axios from 'axios';
-import { useContext } from 'react';
-import { AppContext } from './App';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from './context/AuthContext'
+import { useMessageContext } from './context/MessageContext'
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL
 })
 
 export const useAxiosErrorHandling = () => {
-  const { setIsAuthenticated, setError } = useContext(AppContext);
-  const nav = useNavigate();
+  const { logout } = useAuthContext()
+  const { setErrorMessage } = useMessageContext()
+  const navigate = useNavigate()
+
   axiosInstance.interceptors.response.use(
     response => response, 
     error => {
       if (error.response.status === 403) {
-        setIsAuthenticated(false)
-        localStorage.removeItem('token')
-        nav('/login')
-        alert('hello world')
+        logout()
+        navigate('/')
       } else if (error.response.status === 401) {
-        nav("/sheets")
+        navigate("/sheets")
       } else if (error.response.status === 400) {
-        setError(error.response.data.message)
+        setErrorMessage(error.response.data.message)
       } else if (error.response.data) {
-        setError(error.response.data.message)
+        setErrorMessage(error.response.data.message)
       } else if (error.message) {
-        setError(error.message)
+        setErrorMessage(error.message)
       } else {
-        setError('Internal server error')
+        setErrorMessage('Internal server error')
       }
       return Promise.reject(error)
     }
   )
 }
-
-export default axiosInstance

@@ -1,15 +1,41 @@
-import { useEffect, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AppContext } from '../App'
-import axiosInstance, { useAxiosErrorHandling } from '../axiosConfig'
+import { useEffect } from 'react'
+import { axiosInstance, useAxiosErrorHandling } from '../axiosConfig'
+import { useSheetContext } from '../context/SheetContext'
+import { useMessageContext } from '../context/MessageContext'
+import { Link } from 'react-router-dom'
 
 const Sheets = () => {
   useAxiosErrorHandling()
 
-  const nav = useNavigate()
-  const { loading, setLoading, error, setError, sheets, setSheets, sheetName, setSheetName,
-          message
-   } = useContext(AppContext)
+  const { sheets, setSheets, sheetName, setSheetName } = useSheetContext()
+  const { loading, setLoading, errorMessage, setErrorMessage, successMessage, setSuccessMessage } = useMessageContext()
+
+  useEffect(() => {
+    setErrorMessage('')
+    setSuccessMessage('')
+    setSheetName('')
+    const fetchSheets = async () => {
+      setLoading(true)
+      if (sheets.length === 0) {
+        const token = localStorage.getItem('token');
+        try {
+          const response = await axiosInstance.get(process.env.REACT_APP_API_URL + '/private/sheet/all', {
+            headers: {
+              'Authorization': token
+            }
+          })
+          setSheets(response.data)
+        } catch (e) {
+          console.error(e)
+        } finally {
+          setLoading(false)
+        }
+      } else {
+        setLoading(false)
+      }
+    }
+    fetchSheets()
+  }, [sheets.length, setSheets, setLoading, setErrorMessage, setSuccessMessage, setSheetName]);
 
   const deleteSheet = async (id) => {
     try {
@@ -48,41 +74,14 @@ const Sheets = () => {
     }
   }
 
-  useEffect(() => {
-    const fetchSheets = async () => {
-      setError(false)
-      setLoading(true)
-      if (sheets.length === 0) {
-        const token = localStorage.getItem('token');
-        try {
-          const response = await axiosInstance.get(process.env.REACT_APP_API_URL + '/private/sheet/all', {
-            headers: {
-              'Authorization': token
-            }
-          })
-          setSheets(response.data)
-        } catch (e) {
-          console.error(e)
-          setError(e.message || 'Failed to fetch sheets');
-        } finally {
-          setLoading(false)
-        }
-      } else {
-        setLoading(false)
-      }
-    }
-
-    fetchSheets()
-  }, [sheets.length, setSheets, setLoading, setError]);
-
   if (loading) {
     return <div className="mt-4">Loading...</div>
   }
 
   return (
     <div className="container mt-5">
-      <div className="mt-4 text-danger">{error}</div>
-      <div className="mt-4 text-success">{message}</div>
+      <div className="mt-4 text-danger">{errorMessage}</div>
+      <div className="mt-4 text-success">{successMessage}</div>
       <form onSubmit={createSheet} className="d-flex flex-column flex-md-row gap-2">
         <input type="text" value={sheetName} onInput={e => setSheetName(e.target.value)} required placeholder="Sheet name"/>
         <button type="submit" className="btn btn-primary">Create sheet</button>
@@ -97,7 +96,7 @@ const Sheets = () => {
                   <h5 className="card-title">{sheet.sheetName}</h5>
                   <div className="d-flex flex-wrap gap-2 mt-4">
                     <div className="btn btn-primary">View Logs</div>
-                    <div onClick={() => nav(`/update-sheet/${sheet.sheetId}`)} className="btn btn-secondary">Update Sheet</div>
+                    <Link to={`/update-sheet/${sheet.sheetId}`} className="btn btn-secondary">Update Sheet</Link>
                     <div onClick={() => deleteSheet(sheet.sheetId)} className="btn btn-danger">Delete Sheet</div>
                   </div>
                 </div>

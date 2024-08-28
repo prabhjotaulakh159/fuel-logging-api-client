@@ -1,25 +1,33 @@
-import { useContext } from "react"
 import AuthForm from "../components/AuthForm"
 import { usernameAndPasswordValidation } from "./validation"
-import { AppContext } from "../App"
 import { useNavigate } from "react-router-dom"
-import axiosInstance, { useAxiosErrorHandling } from '../axiosConfig'
+import { axiosInstance, useAxiosErrorHandling } from '../axiosConfig'
+import { useMessageContext } from '../context/MessageContext'
+import { useAuthContext } from '../context/AuthContext'
+import { useEffect } from 'react'
+
 
 const Login = () => {
     useAxiosErrorHandling()
-    const { setMessage, setIsAuthenticated, setError } = useContext(AppContext)
-    const navigate = useNavigate();
+    
+    const { setSuccessMessage,  setErrorMessage } = useMessageContext()
+    const { setIsAuthenticated } = useAuthContext()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+      setSuccessMessage('')
+      setErrorMessage('')
+    }, [setSuccessMessage, setErrorMessage])
 
     const loginFunc = async (e) => {
         e.preventDefault()
-        setMessage('')
         const username = e.target.username.value
         const password = e.target.password.value
         try {
           usernameAndPasswordValidation(username, password)
         }
         catch (e) {
-          setError(e.message)
+          setErrorMessage(e.message)
           return;
         }
         const body = { username: username, password: password }

@@ -1,0 +1,15 @@
+.__form {
+    max-width: 25rem;
+    background-color: #fff;
+}
+
+.__container {
+    max-width: 93.75rem;
+    width: 100%;
+    margin-inline: auto;
+}
+
+.__menu {
+    color: gray;
+    font-size: 2rem;
+}

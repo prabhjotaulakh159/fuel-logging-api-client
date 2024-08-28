@@ -1,17 +1,18 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
-import axiosInstance, { useAxiosErrorHandling } from '../axiosConfig';
-import { AppContext } from '../App';
-import './UpdateSheet.css';
+import { useParams, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { axiosInstance, useAxiosErrorHandling } from '../axiosConfig'
+import { useMessageContext } from '../context/MessageContext'
+import { useSheetContext } from '../context/SheetContext'
 
 const UpdateSheet = () => {
   useAxiosErrorHandling();
-  const nav = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
-  const { error, setError, loading, setLoading, setSheets, sheets, setMessage, sheetName, setSheetName } = useContext(AppContext);
+  const { errorMessage, setErrorMessage, loading, setLoading } = useMessageContext()
+  const { setSheets, sheets, setMessage, sheetName, setSheetName } = useSheetContext()
 
   useEffect(() => {
-    setError('');
+    setErrorMessage('');
     const getSheet = async () => {
       try {
         setLoading(true);
@@ -22,14 +23,14 @@ const UpdateSheet = () => {
         });
         setSheetName(response.data.sheetName); 
       } catch (e) {
-        console.error(e);
+        console.error(e)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     };
 
     getSheet();
-  }, [id, setError, setLoading, setSheetName]);
+  }, [id, setErrorMessage, setLoading, setSheetName])
 
   const changeSheetName = async (e) => {
     e.preventDefault();
@@ -40,7 +41,7 @@ const UpdateSheet = () => {
           'Authorization': localStorage.getItem('token')
         }
       });
-      setMessage(`Successfully updated sheet to ${sheetName}`);
+      setMessage(`Successfully updated sheet to ${sheetName}`)
       const newSheets = sheets.map(sheet => {
         // keep this double equality
         if (sheet.sheetId === Number(id)) {
@@ -49,9 +50,9 @@ const UpdateSheet = () => {
         return sheet; 
       })
       setSheets(newSheets)
-      setTimeout(() => nav('/sheets'), 1000);
+      setTimeout(() => navigate('/sheets'), 1000)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
   };
 
@@ -61,7 +62,7 @@ const UpdateSheet = () => {
 
   return (
     <div className="container d-flex justify-content-center align-items-start align-items-md-center min-vh-100 py-3 py-md-5">
-      <div className="mt-4 text-danger">{error}</div>
+      <div className="mt-4 text-danger">{errorMessage}</div>
       <form onSubmit={changeSheetName} className="__form w-100 p-4 border rounded shadow">
         <h2 className="text-center mb-4">Change sheet name</h2>
         <div className="form-group mb-3">
@@ -73,7 +74,7 @@ const UpdateSheet = () => {
             placeholder="Enter new sheet name" 
             value={sheetName} 
             onChange={(e) => setSheetName(e.target.value)} 
-            onInput={() => setError('')} 
+            onInput={() => setErrorMessage('')} 
             required 
           />
         </div>

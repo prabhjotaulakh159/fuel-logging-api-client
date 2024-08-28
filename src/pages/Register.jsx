@@ -1,13 +1,12 @@
-import { useContext } from "react"
 import AuthForm from "../components/AuthForm"
 import { usernameAndPasswordValidation } from "./validation"
-import { AppContext } from "../App"
-import axiosInstance, { useAxiosErrorHandling } from "../axiosConfig"
+import { axiosInstance, useAxiosErrorHandling } from "../axiosConfig"
 import { useNavigate } from "react-router-dom"
+import { useMessageContext } from '../context/MessageContext'
 
 const Register = () => {
     useAxiosErrorHandling()
-    const { setMessage, setError } = useContext(AppContext)
+    const { setSuccessMessage, setErrorMessage } = useMessageContext()
     const navigate = useNavigate()
 
     const registerFunc = async (e) => {
@@ -18,13 +17,13 @@ const Register = () => {
           usernameAndPasswordValidation(username, password)
         }
         catch (e) {
-          setError(e.message)
+          setErrorMessage(e.message)
           return;
         }
         const body = { username: username, password: password }
         try {
           await axiosInstance.post('/public/user/register', body)
-          setMessage('You have successfully registered')
+          setSuccessMessage('You have successfully registered')
           setTimeout(() => navigate('/login'), 1000)
         } catch (e) {
           console.error(e);

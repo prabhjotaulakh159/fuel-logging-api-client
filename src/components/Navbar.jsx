@@ -1,34 +1,13 @@
-import './Navbar.css'
-import { useContext } from 'react'
-import {AppContext} from '../App'
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../context/AuthContext'
 
 const Navbar = () => {
-    const {
-        isAuthenticated,
-        setUsername,
-        setPassword,
-        setError,
-        setMessage,
-        setIsAuthenticated,
-        setLoading,
-        setSheets,
-        setSheetName
-      } = useContext(AppContext)
+    const { logout, isAuthenticated } = useAuthContext()
+    const navigate = useNavigate()
 
-    const nav = useNavigate()
-
-    const logout = () => {
-        setUsername('')
-        setPassword('')
-        setError('')
-        setMessage('')
-        setIsAuthenticated(false)
-        setLoading(false)
-        setSheets([])
-        setSheetName('')
-        localStorage.clear()
-        nav('/')
+    const logoutAndNavigateBackToHome = () => {
+        logout()
+        navigate('/')
     }
 
     return (
@@ -45,9 +24,8 @@ const Navbar = () => {
                     <li className='nav-item active'>
                         <a href='https://github.com/prabhjotaulakh159/fuel-logging-api-client' className='nav-link'>GitHub</a>
                     </li>
-                    { isAuthenticated && <li className='nav-item active'>
-                        <span onClick = {logout} className='nav-link'>Logout</span>
-                    </li>}
+                    {isAuthenticated && <li className='nav-item active'><span onClick = {logoutAndNavigateBackToHome} className='nav-link'>Logout</span></li>}
+                    {isAuthenticated && <li className='nav-item active'><Link to='/change-password' className='nav-link'>Change Password</Link></li>}
                 </ul>
             </div>
             <div className='d-block d-md-none'>

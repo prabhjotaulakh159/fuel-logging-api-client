@@ -1,17 +1,16 @@
-import './AuthForm.css'
-import { Link } from 'react-router-dom';
-import { AppContext } from '../App';
-import { useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useAuthContext } from '../context/AuthContext'
+import { useMessageContext } from '../context/MessageContext'
 
 const AuthForm = ({submitFunc, btnText, isLogin}) => {
-    const { username, setUsername, password, setPassword, 
-            error, setError, message,
-     } = useContext(AppContext)
+    const { username, setUsername, password, setPassword } = useAuthContext()
+    const { errorMessage, setErrorMessage, successMessage, setSuccessMessage } = useMessageContext()
 
-    // reset the error on page refresh or change to login/register
     useEffect(() => {
-        setError('')
-    }, [setError])
+        setErrorMessage('')
+        setSuccessMessage()
+    }, [setErrorMessage, setSuccessMessage])
 
     return (
         <div className="container d-flex justify-content-center align-items-start align-items-md-center min-vh-100 py-3 py-md-5">
@@ -25,7 +24,11 @@ const AuthForm = ({submitFunc, btnText, isLogin}) => {
                         id="username" 
                         placeholder="Enter username" 
                         value={username}
-                        onInput={e => setUsername(e.target.value)}
+                        onInput={e => {
+                            if (errorMessage) setErrorMessage('')
+                            if (successMessage) setSuccessMessage('')
+                            setUsername(e.target.value)
+                        }}
                         required 
                     />
                 </div>
@@ -37,14 +40,18 @@ const AuthForm = ({submitFunc, btnText, isLogin}) => {
                         id="password" 
                         placeholder="Enter password"
                         value={password}
-                        onInput={e => setPassword(e.target.value)} 
+                        onInput={e => {
+                            if (errorMessage) setErrorMessage('')
+                            if (successMessage) setSuccessMessage('')
+                            setPassword(e.target.value)
+                        }} 
                         required 
                     />
                 </div>
                 <button type="submit" className="btn btn-primary w-100">{btnText}</button>
-                { !isLogin && <p className='mt-3 text-center'>Already have an account ? <Link to='/login'>Login</Link> instead</p>}
-                { error && <p className='mt-3 text-center text-danger'>{error}</p>}
-                { message && <p className='mt-3 text-center text-success'>{message}</p>}
+                <p className='mt-3 text-center text-danger'>{errorMessage}</p>
+                <p className='mt-3 text-center text-success'>{successMessage}</p>
+                {!isLogin && <p className='mt-3 text-center'>Already have an account ? <Link to='/login'>Login</Link> instead</p>}
             </form>
         </div>
     );
