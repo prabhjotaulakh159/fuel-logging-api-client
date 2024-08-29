@@ -16,11 +16,15 @@ export const usernameAndPasswordValidation = (username, password, newPassword) =
     }
 
     if (newPassword) {
+        console.log('new password')
         if (newPassword.trim().length === 0) {
-            throw new Error('Password cannot be blank')
+            throw new Error('New password cannot be blank')
         }
         if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(newPassword)) {
-            throw new Error('Password must be atleast 8 characters, with atleast one uppercase, one lowercase and one number')
+            throw new Error('New password must be atleast 8 characters, with atleast one uppercase, one lowercase and one number')
+        }
+        if (newPassword === username) {
+            throw new Error('Username and new password cannot be the same')
         }
     }
 }

@@ -11,8 +11,6 @@ const Sheets = () => {
   const { loading, setLoading, errorMessage, setErrorMessage, successMessage, setSuccessMessage } = useMessageContext()
 
   useEffect(() => {
-    setErrorMessage('')
-    setSuccessMessage('')
     setSheetName('')
     const fetchSheets = async () => {
       setLoading(true)
@@ -80,12 +78,16 @@ const Sheets = () => {
 
   return (
     <div className="container mt-5">
-      <div className="mt-4 text-danger">{errorMessage}</div>
-      <div className="mt-4 text-success">{successMessage}</div>
       <form onSubmit={createSheet} className="d-flex flex-column flex-md-row gap-2">
-        <input type="text" value={sheetName} onInput={e => setSheetName(e.target.value)} required placeholder="Sheet name"/>
+        <input type="text" value={sheetName} onInput={e => { 
+          setErrorMessage('')
+          setSuccessMessage('')
+          setSheetName(e.target.value)
+          }} required placeholder="Sheet name"/>
         <button type="submit" className="btn btn-primary">Create sheet</button>
       </form>
+      <div className="mt-4 text-success">{successMessage}</div>
+      <div className="mt-4 text-danger">{errorMessage}</div>
       { 
         sheets.length > 0 ? 
         <div className="d-flex flex-wrap gap-4 mt-4">

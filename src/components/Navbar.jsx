@@ -26,6 +26,7 @@ const Navbar = () => {
                     </li>
                     {isAuthenticated && <li className='nav-item active'><span onClick = {logoutAndNavigateBackToHome} className='nav-link'>Logout</span></li>}
                     {isAuthenticated && <li className='nav-item active'><Link to='/change-password' className='nav-link'>Change Password</Link></li>}
+                    {isAuthenticated && <li className='nav-item active'><Link to='/delete-account' className='nav-link'>Delete Account</Link></li>}
                 </ul>
             </div>
             <div className='d-block d-md-none'>

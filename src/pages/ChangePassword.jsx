@@ -3,12 +3,14 @@ import { axiosInstance, useAxiosErrorHandling } from '../axiosConfig'
 import { usernameAndPasswordValidation } from './validation'
 import { useAuthContext } from '../context/AuthContext'
 import { useMessageContext } from '../context/MessageContext'
+import { useNavigate } from 'react-router-dom'
 
 
 const ChangePassword = () => {
   useAxiosErrorHandling()
 
-  const { username, setUsername, password, setPassword, updatedPassword, setUpdatedPassword } = useAuthContext()
+  const navigate = useNavigate()
+  const { username, setUsername, password, setPassword, updatedPassword, setUpdatedPassword, logout } = useAuthContext()
   const { errorMessage, setErrorMessage } = useMessageContext()
 
   useEffect(() => {
@@ -18,11 +20,14 @@ const ChangePassword = () => {
     setErrorMessage('')
   }, [setPassword, setUsername, setUpdatedPassword, setErrorMessage])
   
-  const changePassword = async () => {
+  const changePassword = async (e) => {
+    e.preventDefault()
     try {
       usernameAndPasswordValidation(username, password, updatedPassword)
     } catch (e) {
+      console.log('Validation error:', e.message); // Log the error
       setErrorMessage(e.message)
+      return;
     }
     try {
       const body = {
@@ -30,11 +35,14 @@ const ChangePassword = () => {
         password: password,
         newPassword: updatedPassword
       }
-      axiosInstance.post('/private/user/update-password', body, {
+      const response = await axiosInstance.post('/private/user/update-password', body, {
         headers: {
           'Authorization': localStorage.getItem('token')
         }
       })
+      console.log(response)
+      logout()
+      navigate('/login')
     } catch (e) {
       console.error(e)
     }

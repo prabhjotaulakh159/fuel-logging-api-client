@@ -24,7 +24,7 @@ const Login = () => {
         const username = e.target.username.value
         const password = e.target.password.value
         try {
-          usernameAndPasswordValidation(username, password)
+          usernameAndPasswordValidation(username, password, null)
         }
         catch (e) {
           setErrorMessage(e.message)

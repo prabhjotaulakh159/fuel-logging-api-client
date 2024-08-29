@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Sheets from './pages/Sheets'
 import UpdateSheet from './pages/UpdateSheet'
 import ChangePassword from './pages/ChangePassword'
+import DeleteAccount from './pages/DeleteAccount'
 
 const App = () => {
     const { isAuthenticated } = useAuthContext()
@@ -22,6 +23,7 @@ const App = () => {
                 <Route path='/sheets' element={isAuthenticated ? <Sheets/> : <Navigate to='/login'/>}/>
                 <Route path='/update-sheet/:id' element={isAuthenticated ? <UpdateSheet/> : <Navigate to='/login'/>}/>
                 <Route path='/change-password' element={isAuthenticated ? <ChangePassword/> : <Navigate to='/login'/>}/>
+                <Route path='/delete-account' element={isAuthenticated ? <DeleteAccount/> : <Navigate to='/login'/>}/>s
             </Routes>
         </Container>
     )

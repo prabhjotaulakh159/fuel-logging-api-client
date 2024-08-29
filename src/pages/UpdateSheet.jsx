@@ -8,8 +8,8 @@ const UpdateSheet = () => {
   useAxiosErrorHandling();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { errorMessage, setErrorMessage, loading, setLoading } = useMessageContext()
-  const { setSheets, sheets, setMessage, sheetName, setSheetName } = useSheetContext()
+  const { errorMessage, setErrorMessage, loading, setLoading, setSuccessMessage } = useMessageContext()
+  const { setSheets, sheets, sheetName, setSheetName } = useSheetContext()
 
   useEffect(() => {
     setErrorMessage('');
@@ -35,15 +35,14 @@ const UpdateSheet = () => {
   const changeSheetName = async (e) => {
     e.preventDefault();
     try {
-      const body = { sheetName }; 
+      const body = { sheetName: sheetName }
       await axiosInstance.put(`/private/sheet/update/${id}`, body, {
         headers: {
           'Authorization': localStorage.getItem('token')
         }
-      });
-      setMessage(`Successfully updated sheet to ${sheetName}`)
+      })
+      setSuccessMessage(`Successfully updated sheet to ${sheetName}`)
       const newSheets = sheets.map(sheet => {
-        // keep this double equality
         if (sheet.sheetId === Number(id)) {
           return { ...sheet, sheetName }
         }
@@ -61,7 +60,7 @@ const UpdateSheet = () => {
   }
 
   return (
-    <div className="container d-flex justify-content-center align-items-start align-items-md-center min-vh-100 py-3 py-md-5">
+    <div className="container d-flex flex-column justify-content-center align-items-start align-items-md-center min-vh-100 py-3 py-md-5">
       <div className="mt-4 text-danger">{errorMessage}</div>
       <form onSubmit={changeSheetName} className="__form w-100 p-4 border rounded shadow">
         <h2 className="text-center mb-4">Change sheet name</h2>
