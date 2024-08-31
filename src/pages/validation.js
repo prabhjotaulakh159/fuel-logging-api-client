@@ -16,7 +16,6 @@ export const usernameAndPasswordValidation = (username, password, newPassword) =
     }
 
     if (newPassword) {
-        console.log('new password')
         if (newPassword.trim().length === 0) {
             throw new Error('New password cannot be blank')
         }

@@ -9,13 +9,13 @@ export const useAuthContext = () => {
 const AuthContextProvider = ({children}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [newPassword, setUpdatedPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState('')
 
   const logout = () => {
     setUsername('')
     setPassword('')
-    setUpdatedPassword('')
+    setNewPassword('')
     setIsAuthenticated('')
     localStorage.clear()
   }
@@ -28,7 +28,7 @@ const AuthContextProvider = ({children}) => {
     isAuthenticated, 
     setUsername,
     setPassword,
-    setUpdatedPassword,
+    setNewPassword,
     setIsAuthenticated
   }
 

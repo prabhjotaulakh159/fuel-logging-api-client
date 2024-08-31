@@ -10,22 +10,22 @@ const ChangePassword = () => {
   useAxiosErrorHandling()
 
   const navigate = useNavigate()
-  const { username, setUsername, password, setPassword, updatedPassword, setUpdatedPassword, logout } = useAuthContext()
+  const { username, setUsername, password, setPassword, newPassword, setNewPassword, logout } = useAuthContext()
   const { errorMessage, setErrorMessage } = useMessageContext()
 
   useEffect(() => {
     setUsername('')
     setPassword('')
-    setUpdatedPassword('')
+    setNewPassword('')
     setErrorMessage('')
-  }, [setPassword, setUsername, setUpdatedPassword, setErrorMessage])
+  }, [setPassword, setUsername, setErrorMessage, setNewPassword])
   
   const changePassword = async (e) => {
     e.preventDefault()
     try {
-      usernameAndPasswordValidation(username, password, updatedPassword)
+      usernameAndPasswordValidation(username, password, newPassword)
     } catch (e) {
-      console.log('Validation error:', e.message); // Log the error
+      console.log('Validation error:', e.message)
       setErrorMessage(e.message)
       return;
     }
@@ -33,9 +33,9 @@ const ChangePassword = () => {
       const body = {
         username: username,
         password: password,
-        newPassword: updatedPassword
+        newPassword: newPassword
       }
-      const response = await axiosInstance.post('/private/user/update-password', body, {
+      const response = await axiosInstance.put('/private/user/update-password', body, {
         headers: {
           'Authorization': localStorage.getItem('token')
         }
@@ -89,10 +89,10 @@ const ChangePassword = () => {
                         className="form-control" 
                         id="new-password" 
                         placeholder="Enter new password"
-                        value={updatedPassword}
+                        value={newPassword}
                         onInput={e => {
                           setErrorMessage('')
-                          setUpdatedPassword(e.target.value)
+                          setNewPassword(e.target.value)
                         }} 
                         required 
                     />
