@@ -2,11 +2,12 @@ import { useEffect } from 'react'
 import { axiosInstance, useAxiosErrorHandling } from '../axiosConfig'
 import { useSheetContext } from '../context/SheetContext'
 import { useMessageContext } from '../context/MessageContext'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Sheets = () => {
   useAxiosErrorHandling()
 
+  const navigate = useNavigate()
   const { sheets, setSheets, sheetName, setSheetName } = useSheetContext()
   const { loading, setLoading, errorMessage, setErrorMessage, successMessage, setSuccessMessage } = useMessageContext()
 
@@ -17,7 +18,7 @@ const Sheets = () => {
       if (sheets.length === 0) {
         const token = localStorage.getItem('token');
         try {
-          const response = await axiosInstance.get(process.env.REACT_APP_API_URL + '/private/sheet/all', {
+          const response = await axiosInstance.get('/private/sheet/all', {
             headers: {
               'Authorization': token
             }
@@ -97,7 +98,7 @@ const Sheets = () => {
                 <div className="card-body">
                   <h5 className="card-title">{sheet.sheetName}</h5>
                   <div className="d-flex flex-wrap gap-2 mt-4">
-                    <div className="btn btn-primary">View Logs</div>
+                    <div onClick={() => navigate(`/logs/${sheet.sheetId}/${sheet.sheetName}`)} className="btn btn-primary">View Logs</div>
                     <Link to={`/update-sheet/${sheet.sheetId}`} className="btn btn-secondary">Update Sheet</Link>
                     <div onClick={() => deleteSheet(sheet.sheetId)} className="btn btn-danger">Delete Sheet</div>
                   </div>

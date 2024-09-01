@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import AuthContextProvider from './context/AuthContext'
 import SheetContextProvider from './context/SheetContext'
 import MessageContextProvider from './context/MessageContext'
+import LogContextProvider from './context/LogContext'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
@@ -14,9 +15,11 @@ root.render(
     <BrowserRouter>
         <AuthContextProvider>
             <SheetContextProvider>
-                <MessageContextProvider>
-                    <App />
-                </MessageContextProvider>
+                <LogContextProvider>
+                    <MessageContextProvider>
+                        <App />
+                    </MessageContextProvider>
+                </LogContextProvider>
             </SheetContextProvider>
         </AuthContextProvider>
     </BrowserRouter>
