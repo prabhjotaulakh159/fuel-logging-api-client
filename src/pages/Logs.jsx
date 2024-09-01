@@ -63,6 +63,22 @@ const Logs = () => {
     }
   }
 
+  const deleteLog = async (id) => {
+    try {
+      await axiosInstance.delete(`/private/log/delete/${id}`, {
+        headers: {
+          'Authorization': localStorage.getItem('token') 
+        }
+      })
+      const newLogs = logs.filter(log => log.logId !== id);
+      setCache((prevCache) => ({...prevCache, [sheetId]: newLogs}));
+      setLogs(newLogs);
+      setSuccessMessage('Log deleted successfully');
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return (
     <div className='container mt-5'>
       <h1>Currently viewing sheet: {sheetName}</h1>
@@ -131,7 +147,7 @@ const Logs = () => {
             return (
               <tr key={log.log_id}>
                 <td>
-                  <button className="btn btn-danger">Delete</button>
+                  <button onClick={() => deleteLog(log.logId)} className="btn btn-danger">Delete</button>
                 </td>
                 <td>
                   <button className="btn btn-primary">Update</button>
