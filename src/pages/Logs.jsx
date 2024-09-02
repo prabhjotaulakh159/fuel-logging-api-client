@@ -64,6 +64,10 @@ const Logs = () => {
   }
 
   const deleteLog = async (id) => {
+    const yes = window.confirm('Are you sure you want to delete this log ?')
+    if (!yes) {
+      return
+    }
     try {
       await axiosInstance.delete(`/private/log/delete/${id}`, {
         headers: {
