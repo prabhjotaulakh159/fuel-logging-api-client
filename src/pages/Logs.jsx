@@ -1,9 +1,9 @@
-import { useParams } from 'react-router-dom' 
+import { useParams, useNavigate } from 'react-router-dom' 
 import { useAxiosErrorHandling, axiosInstance } from '../axiosConfig'
 import { useEffect } from 'react'
 import { useLogContext } from '../context/LogContext'
 import { useMessageContext } from '../context/MessageContext'
-import { countries } from './countries'
+import LogForm from '../components/LogForm'
 
 const Logs = () => {
   useAxiosErrorHandling()
@@ -12,16 +12,17 @@ const Logs = () => {
   const { errorMessage, setErrorMessage, successMessage, setSuccessMessage } = useMessageContext()
   const {
     logs, setLogs,
-    fuel, setFuel,
-    cost, setCost,
-    time, setTime,
-    country, setCountry,
-    state, setState,
-    postalCode, setPostalCode,
-    doorNumber, setDoorNumber,
+    fuel,
+    cost,
+    time,
+    country,
+    state,
+    postalCode,
+    doorNumber,
     cache, setCache,
-    date, setDate
+    date
   } = useLogContext()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getLogs = async () => {
@@ -33,7 +34,6 @@ const Logs = () => {
             'Authorization': localStorage.getItem('token')
           }
         })
-        console.log(response)
         setCache((prevCache) => ({ ...prevCache, [sheetId]: response.data }));
         setLogs(cache[sheetId])
       }
@@ -86,48 +86,7 @@ const Logs = () => {
   return (
     <div className='container mt-5'>
       <h1>Currently viewing sheet: {sheetName}</h1>
-      <form className='row g-3 mt-4' onSubmit={createLog}>
-        <div className="col-md-4">
-          <label htmlFor="fuelInput" className="form-label">Fuel Amount</label>
-          <input id="fuelInput" type="number" className="form-control" required value={fuel} onInput={e => setFuel(e.target.value)} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="costInput" className="form-label">Cost</label>
-          <input id="costInput" type="number" className="form-control" required value={cost} onInput={e => setCost(e.target.value)} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="timeInput" className="form-label">Date</label>
-          <input id="timeInput" type="date" className="form-control" required value={date} onInput={e => setDate(e.target.value)} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="timeInput" className="form-label">Time</label>
-          <input id="timeInput" type="time" className="form-control" required value={time} onInput={e => setTime(e.target.value)} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="countrySelect" className="form-label">Country</label>
-          <select id="countrySelect" className="form-select" required value={country} onChange={e => setCountry(e.target.value)}>
-            <option value="" disabled>Select a country</option>
-            {countries.map((country, key) => (
-              <option key={key} value={country}>{country}</option>
-            ))}
-          </select>
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="stateInput" className="form-label">State</label>
-          <input id="stateInput" type="text" className="form-control" required value={state} onInput={e => setState(e.target.value)} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="postalCodeInput" className="form-label">Postal Code</label>
-          <input id="postalCodeInput" type="text" className="form-control" required value={postalCode} onInput={e => setPostalCode(e.target.value)} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="doorNumberInput" className="form-label">Door Number</label>
-          <input id="doorNumberInput" type="number" className="form-control" required value={doorNumber} onInput={e => setDoorNumber(e.target.value)} />
-        </div>
-        <div className="col-12">
-          <button type="submit" className="btn btn-primary">Create trip</button>
-        </div>
-      </form>
+      <LogForm submitFunc={createLog} btnText='Create Log'/>
       <div className="mt-4 text-danger">{errorMessage}</div>
       <div className="mt-4 text-success">{successMessage}</div>
       <div className='table-responsive mt-5'>
@@ -154,7 +113,7 @@ const Logs = () => {
                   <button onClick={() => deleteLog(log.logId)} className="btn btn-danger">Delete</button>
                 </td>
                 <td>
-                  <button className="btn btn-primary">Update</button>
+                  <button onClick={() => navigate(`/logs/update/${log.logId}/${sheetId}`)} className="btn btn-primary">Update</button>
                 </td>
                 <td>{log.logId}</td>
                 <td>{log.fuelAmount} L</td>

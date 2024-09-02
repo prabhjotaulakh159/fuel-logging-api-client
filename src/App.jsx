@@ -10,6 +10,7 @@ import UpdateSheet from './pages/UpdateSheet'
 import ChangePassword from './pages/ChangePassword'
 import DeleteAccount from './pages/DeleteAccount'
 import Logs from './pages/Logs'
+import UpdateLog from './pages/UpdateLog'
 
 const App = () => {
     const { isAuthenticated } = useAuthContext()
@@ -26,6 +27,7 @@ const App = () => {
                 <Route path='/change-password' element={isAuthenticated ? <ChangePassword/> : <Navigate to='/login'/>}/>
                 <Route path='/delete-account' element={isAuthenticated ? <DeleteAccount/> : <Navigate to='/login'/>}/>
                 <Route path='/logs/:sheetId/:sheetName' element={isAuthenticated ? <Logs/> : <Navigate to='/login'/>}/>
+                <Route path='/logs/update/:id/:sheetId' element={isAuthenticated ? <UpdateLog/> : <Navigate to='/login'/>}/>
             </Routes>
         </Container>
     )
