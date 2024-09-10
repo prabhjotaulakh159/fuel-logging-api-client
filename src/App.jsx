@@ -27,7 +27,7 @@ const App = () => {
                 <Route path='/change-password' element={isAuthenticated ? <ChangePassword/> : <Navigate to='/login'/>}/>
                 <Route path='/delete-account' element={isAuthenticated ? <DeleteAccount/> : <Navigate to='/login'/>}/>
                 <Route path='/logs/:sheetId/:sheetName' element={isAuthenticated ? <Logs/> : <Navigate to='/login'/>}/>
-                <Route path='/logs/update/:id/:sheetId' element={isAuthenticated ? <UpdateLog/> : <Navigate to='/login'/>}/>
+                <Route path='/logs/update/:id/:sheetId/:sheetName' element={isAuthenticated ? <UpdateLog/> : <Navigate to='/login'/>}/>
             </Routes>
         </Container>
     )

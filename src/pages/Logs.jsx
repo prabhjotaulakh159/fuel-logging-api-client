@@ -19,27 +19,25 @@ const Logs = () => {
     state,
     postalCode,
     doorNumber,
-    cache, setCache,
     date
   } = useLogContext()
   const navigate = useNavigate()
 
   useEffect(() => {
     const getLogs = async () => {
-      if (cache[sheetId]) {
-        setLogs(cache[sheetId])
-      } else {
+      try {
         const response = await axiosInstance.get(`/private/log/all/${sheetId}`, {
           headers: {
             'Authorization': localStorage.getItem('token')
           }
         })
-        setCache((prevCache) => ({ ...prevCache, [sheetId]: response.data }));
-        setLogs(cache[sheetId])
+        setLogs(response.data)
+      } catch (error) {
+        console.error(error);
       }
     }
     getLogs()
-  }, [cache, setLogs, sheetId, setErrorMessage, setCache, setSuccessMessage])
+  }, [setLogs, sheetId, setErrorMessage, setSuccessMessage])
 
   const createLog = async (e) => {
     e.preventDefault()
@@ -56,7 +54,8 @@ const Logs = () => {
       const response = await axiosInstance.post(`/private/log/create/${sheetId}`, body, {
         headers: { 'Authorization': localStorage.getItem('token') }
       })
-      setCache((prevCache) => ({...prevCache, [sheetId]: response.data}))
+      const newLogs = [...logs, response.data]
+      setLogs(newLogs)
       setSuccessMessage('Successfully created trip')
     } catch (e) {
       console.error(e)
@@ -75,7 +74,6 @@ const Logs = () => {
         }
       })
       const newLogs = logs.filter(log => log.logId !== id);
-      setCache((prevCache) => ({...prevCache, [sheetId]: newLogs}));
       setLogs(newLogs);
       setSuccessMessage('Log deleted successfully');
     } catch (e) {
@@ -113,7 +111,7 @@ const Logs = () => {
                   <button onClick={() => deleteLog(log.logId)} className="btn btn-danger">Delete</button>
                 </td>
                 <td>
-                  <button onClick={() => navigate(`/logs/update/${log.logId}/${sheetId}`)} className="btn btn-primary">Update</button>
+                  <button onClick={() => navigate(`/logs/update/${log.logId}/${sheetId}/${sheetName}`)} className="btn btn-primary">Update</button>
                 </td>
                 <td>{log.logId}</td>
                 <td>{log.fuelAmount} L</td>

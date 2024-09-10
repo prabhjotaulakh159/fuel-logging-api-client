@@ -16,7 +16,6 @@ const LogContextProvider = ({children}) => {
   const [state, setState] = useState('')
   const [postalCode, setPostalCode] = useState('')
   const [doorNumber, setDoorNumber] = useState(0)
-  const [cache, setCache] = useState({})
 
   const contextValue = {
     logs, setLogs,
@@ -28,7 +27,6 @@ const LogContextProvider = ({children}) => {
     postalCode, setPostalCode,
     doorNumber, setDoorNumber,
     date, setDate,
-    cache, setCache
   }
   
   return (
